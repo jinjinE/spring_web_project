@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 다른 Mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="board">
+<!-- 글작성 bno(자동), regdate(자동), viewcnt(0) -->
+	<insert id = "insert">
+		insert into tbl_board
+			(title, content, writer)
+		values
+			(#{title}, #{content}, #{writer})
+	</insert>
+	
+	<!-- 전체 글 목록 보기-->
+<!-- 	<select id = "listAll" resultType = "com.exam.mvc.vo.BoardVO">
+		select bno, title, content, writer, regdate, viewcnt
+		from tbl_board
+		order by bno desc, regdate desc
+	</select> -->
+	
+	<!-- 2단계 : 전체 글 목록 보기 : 검색어있는 -->
+<!-- 	<select id = "listAll" resultType = "com.exam.mvc.vo.BoardVO">
+		select bno, title, content, writer, regdate, viewcnt
+		from tbl_board
+		<include refid = "search"></include>
+		order by bno desc, regdate desc
+	</select> -->
+	
+		<!--3단계 : 전체 글 목록 보기 : 검색+페이지-->
+	<select id = "listAll" resultType = "com.exam.mvc.vo.BoardVO">
+		select *from tbl_board
+	<include refid = "search"></include> 
+		order by bno desc, regdate desc
+	<include refid = "paging"></include> 
+	</select>
+	
+	<sql id = "paging">
+	<!--  between #{start} and #{end}-->
+	limit #{start}, #{end}
+	</sql>
+	
+	<!-- 검색한 글 갯수 -->
+	<select id="countArticle" resultType ="int">
+		select count(*) from tbl_board
+		<include refid = "search"></include>
+	</select>
+	
+	
+	<!-- 상세보기 -->
+	<select id = "view" resultType = "com.exam.mvc.vo.BoardVO">
+		select * from tbl_board
+		where bno=#{bno}
+	</select>
+	
+	<!-- 수정하기 -->
+	<update id = "updateArticle">
+	   UPDATE tbl_board SET 
+	   title=#{title}, content=#{content}, writer=#{writer}
+	   WHERE bno=#{bno}		
+	</update>
+	
+	<!-- 삭제하기 -->
+	<delete id = "deleteArticle">
+		DELETE FROM tbl_board where bno=#{bno}
+	</delete>
+	
+	<update id = "increaseViewcnt">
+		UPDATE tbl_board SET
+			viewcnt=viewcnt+1
+		WHERE bno=#{bno}
+	</update>
+	
+	<sql id = "search">
+		<choose>
+			<!-- 검색어가 들어오는 경우 -->
+			<when test="searchOption.equals('all')">
+				where writer like concat('%',#{keyword},'%')
+				or content like concat('%',#{keyword},'%')
+				or title like concat('%',#{keyword},'%')
+			</when>
+			<!-- 검색어가 들어 오지 않는 경우 -->
+			<otherwise>
+				where ${searchOption} like concat('%',#{keyword},'%')
+			</otherwise>
+		</choose>
+	</sql>
+	
+</mapper>
