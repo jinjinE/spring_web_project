@@ -45,7 +45,8 @@ $(function(){
 						                    <input type="password" name="userPw" id="userPw" class="inpt" required="required" placeholder="Your password">
                 						    <label for="userPw">Your password</label>
 						                    <div class="submit-wrap">
-							                        <input type="submit" value="Sign in" class="submit">
+							                       <!--  <input type="submit" value="Sign in" class="submit"> -->
+							                       <input type = "button" value = "Sign in" id = "btnLogin" class="submit">
 						                    </div>
         					        </form>
     				        </div>

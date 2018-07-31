@@ -9,7 +9,15 @@ public class BoardVO {
 	private String writer;
 	private Date regdate;
 	private int viewcnt;
+	private String userName;
 	
+	
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 	public int getBno() {
 		return bno;
 	}
@@ -49,7 +57,7 @@ public class BoardVO {
 	
 	
 	public String toString() {
-		return "BoardVO [bno="+bno+", title="+title+", content="+content+", writer="+writer+", regdate="+regdate+", viewcnt="+viewcnt+"]";
+		return "BoardVO [bno="+bno+", title="+title+", content="+content+", writer="+writer+", regdate="+regdate+", viewcnt="+viewcnt+", userName="+userName+"]";
 	}
 	
 	

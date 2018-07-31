@@ -32,6 +32,9 @@
 	</select>
 	<input type = "text" name = "keyword" value = "${map.keyword}">
 	<input type = "submit" value = "검색">
+	<c:if test = "${sessionScore.userId != null}">
+		<input type = button value = "글쓰기" id = "idWrite">
+	</c:if>
 </form>
 
 검색된 갯수는 : ${map.count} 입니다.

@@ -26,8 +26,18 @@
 	</select> -->
 	
 		<!--3단계 : 전체 글 목록 보기 : 검색+페이지-->
+<!-- 	<select id = "listAll" resultType = "com.exam.mvc.vo.BoardVO">
+		select bno, title, content, writer, regdate, viewcnt
+		from tbl_board
+	<include refid = "search"></include> 
+		order by bno desc, regdate desc
+	<include refid = "paging"></include> 
+	</select> -->
+	
+	
 	<select id = "listAll" resultType = "com.exam.mvc.vo.BoardVO">
-		select *from tbl_board
+		select bno, title, content, writer, b.regdate, viewcnt, user_name as userName
+		from tbl_board b, tbl_member m
 	<include refid = "search"></include> 
 		order by bno desc, regdate desc
 	<include refid = "paging"></include> 
@@ -38,9 +48,16 @@
 	limit #{start}, #{end}
 	</sql>
 	
+	<!-- 검색한 글 갯수 : 로그인 글 갯수 -->
+<!-- 	<select id="countArticle" resultType ="int">
+		select count(*) from tbl_board
+		<include refid = "search"></include>
+	</select> -->
+	
+	
 	<!-- 검색한 글 갯수 -->
 	<select id="countArticle" resultType ="int">
-		select count(*) from tbl_board
+		select count(*) from tbl_board b, tbl_member m
 		<include refid = "search"></include>
 	</select>
 	
@@ -73,13 +90,16 @@
 		<choose>
 			<!-- 검색어가 들어오는 경우 -->
 			<when test="searchOption.equals('all')">
-				where writer like concat('%',#{keyword},'%')
+				where b.writer = m.user_id
+				and (user_name like concat('%',#{keyword},'%')
+				or writer like concat('%',#{keyword},'%')
 				or content like concat('%',#{keyword},'%')
-				or title like concat('%',#{keyword},'%')
+				or title like concat('%',#{keyword},'%'))
 			</when>
 			<!-- 검색어가 들어 오지 않는 경우 -->
 			<otherwise>
-				where ${searchOption} like concat('%',#{keyword},'%')
+				where b.writer = m.user_id
+				and ${searchOption} like concat('%',#{keyword},'%')
 			</otherwise>
 		</choose>
 	</sql>

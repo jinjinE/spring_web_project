@@ -34,9 +34,21 @@ public class BoardController {
 		return "board/write";
 	}
 	
-	//1> 글 작성한 내용을 저장
-	@RequestMapping(value = "insert", method=RequestMethod.POST)
+	//1> 1단계 : 글 작성한 내용을 저장 ==> 입력된 정보 모델화시켜 저장
+/*	@RequestMapping(value = "insert", method=RequestMethod.POST)
 	public String insert(@ModelAttribute BoardVO vo) throws Exception{
+		boardService.create(vo);
+		return "redirect:list";
+	}*/
+	
+	//1> 2단계 : 글 작성한 내용을 저장 ==> 입력된 정보 모델화시켜 저장
+	@RequestMapping(value = "insert", method = RequestMethod.POST)
+	public String insert(@ModelAttribute BoardVO vo, HttpSession session) throws Exception{
+		
+		String writer = (String) session.getAttribute("userId");
+		String userName = (String) session.getAttribute("userName");
+		vo.setWriter(writer); //로그인한 id가 게시판 작성자로 설정
+		vo.setUserName(userName);
 		boardService.create(vo);
 		return "redirect:list";
 	}

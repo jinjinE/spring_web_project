@@ -77,8 +77,8 @@ public class BoardPager {
 		//페이지 범위 계산 ==> 레코드 갯수로 계산 예정
 		pageBegin = (curPage-1)*PAGE_SCALE;
 		pageEnd = (pageBegin+PAGE_SCALE);
-		System.out.println(pageBegin);
-		System.out.println(pageEnd);
+		/*System.out.println(pageBegin);
+		System.out.println(pageEnd);*/
 	}
 
 	private void setTotPage(int count) {
