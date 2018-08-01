@@ -8,6 +8,10 @@
 <%@ include file = "../include/board_header.jsp" %>
 <script>
 $(function(){
+	
+	//listReply(); ==> controller
+	listReply2(); //댓글목록 출력 ==> restcontroller
+	
 	$("#btnUpdate").click(function(){
 		var title = $('#title').val();
 		var content = $("#content").val();
@@ -41,7 +45,70 @@ $(function(){
 	$("#btnList").click(function(){
 		location.href = "${path}/board/list?curPage=${curPage}&searchOption=${searchOption}&keyword=${keyword}"
 	});
+	
+	$("#btnReply").click(function(){
+		var replytext=$("#replytext").val();//내가 입력한 값
+		var bno = "${dto.bno}";//글번호
+		var param = "replytext="+replytext+"&bno="+bno;
+		//전달되는 값
+		$.ajax({//속성:값으로 전달
+			type : "post",//전달타입 : get/post
+			url : "${path}/reply/insert",//전달될 URL주소
+			data : param,//전달되는 값
+			success : function(){//성공적으로 전송되었을때
+				alert("댓글 등록되었습니다.");
+				listReply2(); //함수 호출 ==> 댓글 출력
+			}
+		});
+	});
+	
+		
 });
+
+//댓글 목록 출력하는 함수
+// 1> controller인 경우
+function listReply(){
+	$.ajax({
+		type : "get",
+		url : "${path}/reply/list?bno=${dto.bno}",
+		success:function(result){
+			$("#listReply").html(result);
+		}//replyList에서 만들어서 result에 저장ㅇ
+	});
+	
+}
+// 2> RestController인경우
+function listReply2(){
+	$.ajax({
+		type : "get",
+		url : "${path}/reply/listJson?bno=${dto.bno}",
+		success:function(result){
+			//alert(result);
+			/* $("#listReply").html(result); */
+			var output = "<table>";
+			for(var i in result){
+				output+="<tr>"
+				output += "<td>"+result[i].userName;
+				output += "("+changeDate(result[i].regdate)+")<br>";
+				output += result[i].replytext + "</td>";
+				output += "</tr>"
+			}
+			output+="</table>";
+			$("#listReply").html(output);
+		}
+	});//replyList에서 만들어서 result에 저장
+}
+
+function changeDate(date){
+	date = new Date(parseInt(date));
+	year = date.getFullYear();
+	month = date.getMonth();
+	day = date.getDate();
+	hour = date.getHours();
+	minute = date.getMinutes();
+	second = date.getSeconds();
+	return year+"-"+month+"-"+day+"-"+hour+":"+minute+":"+second;
+}
 </script>
 </head>
 <body>
@@ -55,10 +122,27 @@ $(function(){
 	<div>내용 : <textarea name = "content" id = "content" rows = "4" cols = "80">${dto.content}</textarea></div>
 	<div>
 	<input type = "hidden" name = "bno" value = "${dto.bno}">
-	<input type = "button" value = "수정" id = "btnUpdate">
-	<input type = "button" value = "삭제" id = "btnDelete">
+	<c:if test="${sessionScope.userId!=null}">
+		<input type = "button" value = "수정" id = "btnUpdate">
+		<input type = "button" value = "삭제" id = "btnDelete">
+	</c:if>
 	<input type = "button" value = "목록보기" id = "btnList">
 	</div>
 </form>
+
+<!--댓글 작성 입력공간 -->
+<div>
+<c:if test="${sessionScope.userId != null}">
+	<textarea name = "replytext" id = "replytext" rows="5" cols="80" placeholder="댓글 작성해주세요"></textarea>
+<br/>
+<input type = "button" value = "댓글작성" id = "btnReply">
+</c:if>
+</div>
+<!-- 댓글 출력 공간 -->
+<div id = "listReply">
+</div>
 </body>
 </html>
+
+
+

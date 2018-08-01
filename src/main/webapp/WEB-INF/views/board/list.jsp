@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 <%@ include file = "../include/board_header.jsp" %>
+<%@ include file = "../include/sessionCheck.jsp" %>
 <script>
 	$(function(){
 		$("#btnWrite").click(function(){
@@ -55,9 +56,9 @@
 			<td><a href="${path}/board/view?bno=${row.bno}&curPage=${map.boardPager.curPage}&searchOption=${map.searchOption}&keyword=${map.keyword}">
 			${row.title}
 			<!-- 댓글갯수 보이게 -->
-			<%-- <c:if test="${row.recnt>0}">
+			<c:if test="${row.recnt>0}">
 				<span style ="color:red;">(${row.recnt})</span>
-			</c:if> --%>
+			</c:if>
 			</a></td>
 			<td>${row.writer}</td>
 			<td><fmt:formatDate value = "${row.regdate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
@@ -100,6 +101,9 @@
 		</c:if>
 	</tr> 
 </table>
-<input type = "button" value = "글쓰기" id = "btnWrite">
+
+<c:if test="${sessionScope.userId!=null}">
+	<input type = "button" value = "글쓰기" id = "btnWrite">
+</c:if>
 </body>
 </html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 다른 Mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="reply">
+
+	<!-- 댓글 추가 -->
+	<insert id = "insertReply">
+		insert into tbl_reply(bno, replytext, replyer)
+		values (#{bno}, #{replytext}, #{replyer})
+	</insert>
+	
+	<!-- 댓글 목록 -->
+	<select id = "listReply" resultType = "com.exam.mvc.vo.ReplyVO">
+		select rno, bno, replytext, replyer, r.regdate, r.updatedate, user_name as userName
+		from tbl_reply r, tbl_member m
+		where r.replyer=m.user_id and bno=#{bno}
+	</select>
+	
+</mapper>

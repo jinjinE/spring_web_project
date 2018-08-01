@@ -11,6 +11,10 @@
 <c:set var = "path" value = "${pageContext.request.contextPath}"/>
 
 	<div>
+		<a href = "${path}/member/list">회원목록보기</a>
+		<a href = "${path}/member/write">회원등록보기</a>
+	</div>
+	<div>
 		<a href = "${path}/board/list">게시판 목록보기</a>
 		<a href = "${path}/board/write">게시판 글쓰기</a>
 		
