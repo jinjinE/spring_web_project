@@ -4,16 +4,39 @@
 <mapper namespace="reply">
 
 	<!-- 댓글 추가 -->
-	<insert id = "insertReply">
+	<!--<insert id = "insertReply">
 		insert into tbl_reply(bno, replytext, replyer)
 		values (#{bno}, #{replytext}, #{replyer})
+	</insert> -->
+	<insert id = "insertReply">
+		insert into tbl_reply(bno, replytext, replyer, secret_reply)
+		values (#{bno}, #{replytext}, #{replyer}, #{secretReply})
 	</insert>
 	
 	<!-- 댓글 목록 -->
-	<select id = "listReply" resultType = "com.exam.mvc.vo.ReplyVO">
+	<!-- <select id = "listReply" resultType = "com.exam.mvc.vo.ReplyVO">
 		select rno, bno, replytext, replyer, r.regdate, r.updatedate, user_name as userName
 		from tbl_reply r, tbl_member m
 		where r.replyer=m.user_id and bno=#{bno}
+	</select> -->
+	<select id = "listReply" resultType = "com.exam.mvc.vo.ReplyVO">
+		select r.rno, bno, r.replytext, r.replyer, r.secret_reply AS secretReply,
+		r.regdate, r.updatedate, m.user_name as userName,
+		<!-- writer가져오는 서브쿼리 -->
+		(select writer FROM tbl_board WHERE bno = r.bno) AS writer
+		from tbl_reply r, tbl_member m
+		where r.replyer=m.user_id and bno=#{bno}
+		ORDER BY rno desc
+		<include refid = "paging"/>
+	</select>
+	
+	<sql id ="paging">
+	limit #{start}, #{end}
+	</sql>
+	
+	
+	<select id = "countReply" resultType = "int">
+		SELECT COUNT(*) FROM tbl_reply WHERE bno=#{bno}
 	</select>
 	
 </mapper>

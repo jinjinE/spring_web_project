@@ -3,6 +3,7 @@ package com.exam.mvc.service;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
 
@@ -15,9 +16,28 @@ public class ReplyServiceImp1 implements ReplyService {
 	@Inject //전달해서 주입
 	ReplyDAO replyDao;
 	
-	@Override
-	public List<ReplyVO> list(Integer bno) {
+	//@Override
+	/*public List<ReplyVO> list(Integer bno) {
 		return replyDao.list(bno);
+	}*/
+	@Override
+	public List<ReplyVO> list(Integer bno, int start, int end, HttpSession session) {
+		List<ReplyVO> items = replyDao.list(bno, start, end);
+		String userId = (String)session.getAttribute("userId");
+		for(ReplyVO vo : items) {
+			if(vo.getSecretReply().equals("y")){
+				if(userId == null) {
+				vo.setReplytext("비밀댓글입니다.");
+				}else {	
+					String writer = vo.getWriter();
+					String replyer = vo.getReplyer();
+				    if(!userId.equals(writer) && !userId.equals(replyer)) {
+					vo.setReplytext("비밀댓글입니다.");
+				}
+			}
+		}
+		}
+		return items;
 	}
 
 	@Override
@@ -36,5 +56,11 @@ public class ReplyServiceImp1 implements ReplyService {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public int count(int bno) {
+		return replyDao.count(bno);
+	}
+
 
 }

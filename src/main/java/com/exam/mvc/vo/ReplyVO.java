@@ -10,6 +10,21 @@ public class ReplyVO {
 	private String userName;
 	private Date regdate;
 	private Date updatedate;
+	private String secretReply; //비밀댓글 유무 ==> y,n	
+	private String writer; //게시판에 들 작성자
+	
+	public String getSecretReply() {
+		return secretReply;
+	}
+	public void setSecretReply(String secretReply) {
+		this.secretReply = secretReply;
+	}
+	public String getWriter() {
+		return writer;
+	}
+	public void setWriter(String writer) {
+		this.writer = writer;
+	}
 	public Integer getRno() {
 		return rno;
 	}

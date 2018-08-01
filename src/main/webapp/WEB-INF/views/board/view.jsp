@@ -10,7 +10,7 @@
 $(function(){
 	
 	//listReply(); ==> controller
-	listReply2(); //댓글목록 출력 ==> restcontroller
+	listReply("1"); //댓글목록 출력 ==> restcontroller
 	
 	$("#btnUpdate").click(function(){
 		var title = $('#title').val();
@@ -49,7 +49,13 @@ $(function(){
 	$("#btnReply").click(function(){
 		var replytext=$("#replytext").val();//내가 입력한 값
 		var bno = "${dto.bno}";//글번호
-		var param = "replytext="+replytext+"&bno="+bno;
+		var secretReply = "n";//비밀댓글 아님
+		if($("#secretReply").is(":checked")){
+			//is() : ()안에 있는 요소가 조재하느 지 여부 체크
+			//checked 존재하면 : true, 아니면 : false
+			secretReply = "y";
+		}
+		var param = "replytext="+replytext+"&bno="+bno+"&secretReply="+secretReply;
 		//전달되는 값
 		$.ajax({//속성:값으로 전달
 			type : "post",//전달타입 : get/post
@@ -57,31 +63,35 @@ $(function(){
 			data : param,//전달되는 값
 			success : function(){//성공적으로 전송되었을때
 				alert("댓글 등록되었습니다.");
-				listReply2(); //함수 호출 ==> 댓글 출력
+				listReply("1"); //함수 호출 ==> 댓글 출력
 			}
 		});
-	});
-	
+	});	
 		
 });
 
 //댓글 목록 출력하는 함수
 // 1> controller인 경우
-function listReply(){
+function listReply(num){
 	$.ajax({
-		type : "get",
-		url : "${path}/reply/list?bno=${dto.bno}",
+		type : "post",
+		url : "${path}/reply/list?bno=${dto.bno}&curPage="+num,
 		success:function(result){
 			$("#listReply").html(result);
-		}//replyList에서 만들어서 result에 저장ㅇ
+			//alert("성공");
+		},//replyList에서 만들어서 result에 저장ㅇ
+		error:function() {
+			alert("실퍠");
+		}
+		
 	});
 	
 }
 // 2> RestController인경우
-function listReply2(){
+function listReply2(num){
 	$.ajax({
-		type : "get",
-		url : "${path}/reply/listJson?bno=${dto.bno}",
+		type : "post",
+		url : "${path}/reply/listJson?bno=${dto.bno}&curPage="+num,
 		success:function(result){
 			//alert(result);
 			/* $("#listReply").html(result); */
@@ -135,6 +145,8 @@ function changeDate(date){
 <c:if test="${sessionScope.userId != null}">
 	<textarea name = "replytext" id = "replytext" rows="5" cols="80" placeholder="댓글 작성해주세요"></textarea>
 <br/>
+<!-- 비밀댓글 체크박스 ==> checked : true, non-checked : false -->
+<input type = "checkbox" id = "secretReply" name = "secretReply"> 비밀 댓글
 <input type = "button" value = "댓글작성" id = "btnReply">
 </c:if>
 </div>
