@@ -45,21 +45,24 @@ public class ReplyServiceImp1 implements ReplyService {
 		replyDao.create(vo);
 	}
 
-	@Override
+	@Override //수정
 	public void update(ReplyVO vo) {
-		// TODO Auto-generated method stub
-
+		replyDao.update(vo);
 	}
 
-	@Override
+	@Override //삭제
 	public void delete(Integer rno) {
-		// TODO Auto-generated method stub
-
+		replyDao.delete(rno);
 	}
 
 	@Override
 	public int count(int bno) {
 		return replyDao.count(bno);
+	}
+
+	@Override //댓글 편집모드
+	public ReplyVO detail(Integer rno) {
+		return replyDao.detail(rno);
 	}
 
 

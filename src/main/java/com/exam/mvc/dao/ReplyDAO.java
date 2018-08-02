@@ -17,4 +17,6 @@ public interface ReplyDAO {
 	public void delete(Integer rno);
 	// 댓글 갯수 ==>  페이지처리
 	public int count(int bno);
+	// 댓글 편집모드 ==> 수정, 삭제를 위한
+	public ReplyVO detail(Integer rno);
 }

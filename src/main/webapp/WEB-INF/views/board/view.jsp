@@ -10,7 +10,7 @@
 $(function(){
 	
 	//listReply(); ==> controller
-	listReply("1"); //댓글목록 출력 ==> restcontroller
+	listReplyRest("1"); //댓글목록 출력 ==> restcontroller
 	
 	$("#btnUpdate").click(function(){
 		var title = $('#title').val();
@@ -109,6 +109,20 @@ function listReply2(num){
 	});//replyList에서 만들어서 result에 저장
 }
 
+
+//** 댓글 목록 => Rest방식 => 댓글출력방법 선택사항
+function listReplyRest(num){
+	$.ajax({
+		type : "post",
+		url : "${path}/reply/list?bno=${dto.bno}&curPage="+num,
+		success:function(result){
+			$("#listReply").html(result);
+			//alert("성공");
+		}
+		
+	});
+}
+
 function changeDate(date){
 	date = new Date(parseInt(date));
 	year = date.getFullYear();
@@ -119,7 +133,29 @@ function changeDate(date){
 	second = date.getSeconds();
 	return year+"-"+month+"-"+day+"-"+hour+":"+minute+":"+second;
 }
+
+function showReplyModify(rno){
+	$.ajax({
+		type : "post",
+		url : "${path}/reply/detail/"+rno,
+		success:function(result){
+			$("#modifyReply").html(result);
+			$("#modifyReply").css("visibility", "visible");
+			//alert("성공");
+		}
+		
+	});
+}
 </script>
+<style>
+	#modifyReply{
+		width : 500;
+		height : 100;
+		border : 1px solid gray;
+		z-index: 10;
+		visibility : hidden;
+	}
+</style>
 </head>
 <body>
 <%@ include file = "../include/board_menu.jsp" %>
@@ -153,6 +189,7 @@ function changeDate(date){
 <!-- 댓글 출력 공간 -->
 <div id = "listReply">
 </div>
+
 </body>
 </html>
 

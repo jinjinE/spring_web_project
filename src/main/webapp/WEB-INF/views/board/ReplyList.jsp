@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 <%@ include file = "../include/board_header.jsp" %>
+
 </head>
 <body>
 <table border= "1" width = "500px">
@@ -14,11 +15,20 @@
 			<td>
 				${row.userName} (<fmt:formatDate value = "${row.regdate}" pattern="yyyy-MM-dd HH:mm:ss"/>)<br>
 				${row.replytext}
+				<br/>
+				
+				<c:if test = "${sessionScope.userId ==row.replyer}">
+					<input type = "button" value = "수정" id = "btnModify" onclick = "showReplyModify('${row.rno}')"><br/>
+				</c:if>
 			</td>
 		</tr>
 	</c:forEach>
+	<tr><td>
+				<div id = "modifyReply">
+				</div> 
+	</td></tr>
 	<!-- 페이지처리 -->
-	<tr>
+ 	<tr>
 		<td>
 			<c:if test= "${replyPager.curBlock>1}">
 				<a href = "javascript:listReply('1')">[처음]</a>

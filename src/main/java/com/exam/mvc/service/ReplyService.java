@@ -17,4 +17,6 @@ public interface ReplyService {
 	public void delete(Integer rno);
 	//5> 댓글 갯수
 	public int count(int bno);
+	//6> 댓글 상세보기
+	public ReplyVO detail(Integer rno);
 }

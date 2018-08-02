@@ -38,19 +38,23 @@ public class ReplayDAOImp1 implements ReplyDAO {
 
 	@Override
 	public void update(ReplyVO vo) {
-		// TODO Auto-generated method stub
-
+		System.out.println(vo.getRno());
+		sqlSession.update("reply.updateReply", vo);
 	}
 
 	@Override
 	public void delete(Integer rno) {
-		// TODO Auto-generated method stub
-
+		sqlSession.delete("reply.deleteReply", rno);
 	}
 
 	@Override
 	public int count(int bno) {
 		return sqlSession.selectOne("reply.countReply", bno);
+	}
+
+	@Override
+	public ReplyVO detail(Integer rno) {
+		return sqlSession.selectOne("reply.detailReply", rno);
 	}
 
 }

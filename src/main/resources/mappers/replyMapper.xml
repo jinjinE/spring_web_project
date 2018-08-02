@@ -39,4 +39,25 @@
 		SELECT COUNT(*) FROM tbl_reply WHERE bno=#{bno}
 	</select>
 	
+	
+	
+	
+	<!-- 댓글 수정 -->
+	<update id = "updateReply">
+		update tbl_reply set replytext=#{replytext}
+		where rno=#{rno}
+	</update>
+	<!-- 댓글 삭제 -->
+	<delete id = "deleteReply">
+	delete from tbl_reply where rno=#{rno}
+	</delete>
+	
+	<!-- 댓글 상세보기 -->
+	<select id = "detailReply" resultType = "com.exam.mvc.vo.ReplyVO">
+	select rno, bno, replytext, replyer, regdate, updatedate,
+	secret_reply as secretReply from tbl_reply
+	where rno=#{rno}
+	</select>
+	
+	
 </mapper>
